@@ -7,9 +7,9 @@ class TestTime(unittest.TestCase):
 
     def test_time(self):
         self.assertEqual(dumb_code.time(3, 12), 4)
-        self.assertEqual(dumb_code.time(-3, 12), )
-        self.assertEqual(dumb_code.time(3, -12), )
-        self.assertEqual(dumb_code.time(-3, -12), )
+
+        with self.assertRaises(ValueError):
+            dumb_code.time(0,12)
         
 
 
