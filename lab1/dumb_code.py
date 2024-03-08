@@ -1,6 +1,9 @@
 
 def time(speed, distance):
     
+    if not isinstance(speed, (int, float)) or not isinstance(distance, (int, float)):
+        raise ValueError("Speed and distance must be numeric values")
+     
     if speed == 0:
         raise ValueError("Can't divide by 0")
     

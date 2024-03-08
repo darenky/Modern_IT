@@ -18,6 +18,16 @@ class TestTime(unittest.TestCase):
         with self.assertRaises(ValueError):
             dumb_code.time(-1, -12)
 
-        
+    def test_time2(self):
+
+        with self.assertRaises(ValueError):
+            dumb_code.time('abc', 12)
+
+        with self.assertRaises(ValueError):
+            dumb_code.time(1, 'xyz')
+
+        with self.assertRaises(ValueError):
+            dumb_code.time('foo', 'bar')
+
 if __name__ == '__main__':
     unittest.main()
