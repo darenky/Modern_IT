@@ -23,7 +23,7 @@ jobs:
           - name: Install dependencies
             run: |
               python -m pip install --upgrade pip
-              pip install pytest
+              
           #     pip install pylint
       
           # - name: Lint code
@@ -31,6 +31,6 @@ jobs:
           #     pylint $(find . -type f -name '*.py')
         
           - name: Run tests
-            run: pytest lab1/test_time.py #python test_time.py
+            run: python lab1/test_time.py 
               
 
