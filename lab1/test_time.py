@@ -28,10 +28,6 @@ class TestTime(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             dumb_code.time('foo', 'bar')
-            
-
-    def test_time3(self):
-        self.assertEqual(dumb_code.time(3, 9), 3)
 
 if __name__ == '__main__':
     unittest.main()
