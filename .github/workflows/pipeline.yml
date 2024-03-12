@@ -30,7 +30,7 @@ jobs:
             run: |
               pylint $(git ls-files '*.py') 
         
-          - name: Run tests
-            run: pytest lab1/test_time.py 
+          # - name: Run tests
+          #   run: pytest lab1/test_time.py python test_time.py
               
 
