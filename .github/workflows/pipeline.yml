@@ -27,7 +27,7 @@ jobs:
       
           - name: Lint code
             run: |
-              flake8 $(find lab1/ -type f -name '*.py') 
+              flake lab1/
         
           - name: Run tests
             run: python lab1/test_time.py 
