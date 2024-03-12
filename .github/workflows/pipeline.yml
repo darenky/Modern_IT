@@ -27,7 +27,7 @@ jobs:
       
           - name: Lint code
             run: |
-              flake lab1/
+              flake8 lab1/
         
           - name: Run tests
             run: python lab1/test_time.py 
