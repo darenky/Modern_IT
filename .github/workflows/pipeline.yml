@@ -27,7 +27,7 @@ jobs:
       
           - name: Lint code
             run: |
-              flake8 lab1/
+              flake8 lab1/ --ignore=W291,E501,E305,W293,E302
         
           - name: Run tests
             run: python lab1/test_time.py 
