@@ -1,6 +1,7 @@
 import sys
 
 def main():
+    
     try:
         print("Enter value: ")
         value = sys.stdin.readline().strip()
