@@ -27,8 +27,6 @@ class Test_Unit_Convertor(unittest.TestCase):
     def test_invalid_input(self):
         result = convert_units("invalid_value", "cm", "mm")
         self.assertIsNone(result)
-
-       # self.assertTrue(value_str.isdigit())
         
     def test_empty_input(self):
 

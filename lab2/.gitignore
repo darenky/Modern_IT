@@ -4,4 +4,5 @@ __pycache__
 aa.py
 bb.py
 test-copy.py
-testBB.py.gitignore
+testBB.py
+.gitignore
