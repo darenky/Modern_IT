@@ -22,7 +22,7 @@ class Test_Unit_Convertor(unittest.TestCase):
         #with self.assertRaises(ValueError): # for now skip this mistake
             #convert_units(-1, "m", "cm")
 
-        with self.assertRaisesRegex(ValueError,"Invalid input"): 
+        with self.assertRaisesRegex("Invalid input"): 
             convert_units("ssd", "mm", "cm")
 
     # def test_invalid_input(self): #alternative to problematic test_value ?!?!?
@@ -39,6 +39,7 @@ class Test_Unit_Convertor(unittest.TestCase):
         
         with self.assertRaises(ValueError):
             convert_units("1", "m", "")
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

@@ -23,11 +23,7 @@ def convert_units(value, from_unit, to_unit):
         "km": 1000000,
         "mi": 1609344
     }
-    try:
-        value = float(value)
-    except ValueError:
-        raise ValueError("Invalid value")\
-        
+
     if not from_unit or not to_unit or not value:
         raise ValueError("Invalid input")
     
