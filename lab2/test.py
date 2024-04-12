@@ -17,16 +17,17 @@ class Test_Unit_Convertor(unittest.TestCase):
         self.assertEqual(convert_units(2.5, 'km', 'm'), 2500)
         self.assertEqual(convert_units(5, 'mi', 'km'), 8.04672)
     
-    # def test_value(self):
+    def test_value(self):
 
-    #     #with self.assertRaises(ValueError):
-    #         #convert_units(-1, "m", "cm")
+        #with self.assertRaises(ValueError): # for now skip this mistake
+            #convert_units(-1, "m", "cm")
 
-    #     with self.assertRaisesRegex("Invalid input"): 
-    #         convert_units("ssd", "mm", "cm")
-    def test_invalid_input(self):
-        result = convert_units("invalid_value", "cm", "mm")
-        self.assertIsNone(result)
+        with self.assertRaisesRegex("Invalid input"): 
+            convert_units("ssd", "mm", "cm")
+
+    # def test_invalid_input(self): #alternative to problematic test_value ?!?!?
+    #     result = convert_units("invalid_value", "cm", "mm")
+    #     self.assertIsNone(result)
         
     def test_empty_input(self):
 
