@@ -13,8 +13,6 @@ def main():
     result = convert_units(value, from_unit, to_unit)
     print(f"{result} {to_unit}")
   
-    
-
 def convert_units(value, from_unit, to_unit):
     conversion_factors = {
         "mm": 1,
@@ -23,10 +21,11 @@ def convert_units(value, from_unit, to_unit):
         "km": 1000000,
         "mi": 1609344
     }
+
     try:
         value = float(value)
     except ValueError:
-        raise ValueError("Invalid value")\
+        raise ValueError("Invalid input")
         
     if not from_unit or not to_unit or not value:
         raise ValueError("Invalid input")
@@ -39,7 +38,6 @@ def convert_units(value, from_unit, to_unit):
     converted_value = mm_value / conversion_factors.get(to_unit)
 
     return converted_value
-
 
 if __name__ == "__main__":
     main()

@@ -19,15 +19,8 @@ class Test_Unit_Convertor(unittest.TestCase):
     
     def test_value(self):
 
-        #with self.assertRaises(ValueError): # for now skip this mistake
-            #convert_units(-1, "m", "cm")
-
         with self.assertRaisesRegex(ValueError,"Invalid input"): 
             convert_units("ssd", "mm", "cm")
-
-    # def test_invalid_input(self): #alternative to problematic test_value ?!?!?
-    #     result = convert_units("invalid_value", "cm", "mm")
-    #     self.assertIsNone(result)
         
     def test_empty_input(self):
 
