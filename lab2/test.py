@@ -20,19 +20,8 @@ class Test_Unit_Convertor(unittest.TestCase):
     def test_value(self):
 
         with self.assertRaisesRegex(ValueError,"VALUE MUST BE NON-NEGATIVE NUMERIC"): 
-            convert_units("ssd", "mm", "cm")
+            convert_units("invalid", "mm", "cm")
         
-    # def test_empty_input(self):
-
-    #     with self.assertRaises(ValueError):
-    #         convert_units("", "m", "m")
-        
-    #     with self.assertRaises(ValueError):
-    #         convert_units("1", "", "m")
-        
-    #     with self.assertRaises(ValueError):
-    #         convert_units("1", "m", "")
-
 if __name__ == '__main__':
     unittest.main(verbosity=2)
 

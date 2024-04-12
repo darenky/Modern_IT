@@ -1,15 +1,26 @@
 import sys
 
 def main():
+    try:
+        print("Enter value: ")
+        value = sys.stdin.readline().strip()
 
-    value = input("Enter value: ")
+        from_unit = input("Type initial units: ").strip().lower()
+        to_unit = input("Type desired units: ").strip().lower()
+        result = convert_units(value, from_unit, to_unit)
 
-    from_unit = input("Type initial units: ").strip().lower()
-    to_unit = input("Type desired units: ").strip().lower()
-    result = convert_units(value, from_unit, to_unit)
-    print(f"{result} {to_unit}")
-  
+        print(f"{value} {from_unit} = {result} {to_unit}")
+
+        return 0
+
+    except Exception as e:
+        
+        sys.stderr.write(f"Error: {e}\n")
+
+        return 1
+
 def convert_units(value, from_unit, to_unit):
+
     conversion_factors = {
         "mm": 1,
         "cm": 10,
@@ -23,7 +34,6 @@ def convert_units(value, from_unit, to_unit):
     except ValueError:
         raise ValueError("VALUE MUST BE NON-NEGATIVE NUMERIC")
         
-
     if from_unit not in conversion_factors or to_unit not in conversion_factors:
         raise ValueError("ONLY mm,cm,m,km,mi ARE ACCEPTED")
 
@@ -35,4 +45,5 @@ def convert_units(value, from_unit, to_unit):
 
 if __name__ == "__main__":
     main()
+
 
