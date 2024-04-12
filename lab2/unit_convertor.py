@@ -3,10 +3,6 @@ import sys
 def main():
 
     value = input("Enter value: ")
-    try:
-        value = float(value)
-    except ValueError:
-        print("Invalid value")
 
     from_unit = input("Type initial units: ").strip().lower()
     to_unit = input("Type desired units: ").strip().lower()
@@ -25,13 +21,11 @@ def convert_units(value, from_unit, to_unit):
     try:
         value = float(value)
     except ValueError:
-        raise ValueError("Invalid input")
+        raise ValueError("VALUE MUST BE NON-NEGATIVE NUMERIC")
         
-    if not from_unit or not to_unit or not value:
-        raise ValueError("Invalid input")
-    
+
     if from_unit not in conversion_factors or to_unit not in conversion_factors:
-        raise ValueError("Invalid input")
+        raise ValueError("ONLY mm,cm,m,km,mi ARE ACCEPTED")
 
     mm_value = value * conversion_factors.get(from_unit)
 
