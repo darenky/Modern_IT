@@ -1,58 +1,51 @@
 import sys
 
-units = {
-    "mm": 1,
-    "cm": 10,
-    "m": 1000,
-    "km": 1000000,
-    "mi": 1609344
-}
-
 def main():
-    
-    input = sys.stdin.read().strip().split() ## input from standart stream
-
-    if len(input) != 2:
-        print("Wrong format")
-        sys.exit(1)
-
-    value = float(input[0])
-    from_unit = input[1]
-
-    if len(sys.argv) != 1: ## input from cmd args
-        to_unit = sys.argv[1]
-    else:
-        print("Wrong format")
-        sys.exit(1)
 
     try:
+        print("Enter value: ")
+        value = sys.stdin.readline().strip()
+
+        from_unit = input("Type initial units: ").strip().lower()
+        to_unit = input("Type desired units: ").strip().lower()
         result = convert_units(value, from_unit, to_unit)
+
         print(f"{result}")
-    except ValueError as e:
-        sys.stderr.write(f"ERROR: {e}\n")
-        sys.exit(0)
+
+        return 0
+
+    except Exception as e:
+        
+        sys.stderr.write(f"Error: {e}\n")
+
+        return 1
 
 def convert_units(value, from_unit, to_unit):
+
+    conversion_factors = {
+        "mm": 1,
+        "cm": 10,
+        "m": 1000,
+        "km": 1000000,
+        "mi": 1609344
+    }
 
     try:
         value = float(value)
     except ValueError:
-        raise ValueError("Value must be numeric.")
+        raise ValueError("VALUE MUST BE NON-NEGATIVE NUMERIC")
  
-    if from_unit not in units or to_unit not in units:
-        raise ValueError("Only mm, cm, m, km, mi are accepted.")
+    if from_unit not in conversion_factors or to_unit not in conversion_factors:
+        raise ValueError("ONLY mm,cm,m,km,mi ARE ACCEPTED")
 
-    mm_value = value * units[from_unit]
+    mm_value = value * conversion_factors.get(from_unit)
 
-    converted_value = mm_value / units[to_unit]
+    converted_value = mm_value / conversion_factors.get(to_unit)
 
     return converted_value
 
 if __name__ == "__main__":
-    raise SystemExit(main())
-
-    #sys.exit(main())
-
+    main()
 
 '''тема лаби cli, exitcodes та stdin/stdout/stderr
 
