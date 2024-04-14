@@ -10,20 +10,22 @@ units = {
 
 def main():
     
-    input = sys.stdin.read().strip().split() ## input from standart stream
-
+    # Input from stdin
+    input = sys.stdin.read().strip().split()
     if len(input) != 2:
-        print("Wrong format")
+        print("Wrong format", file=sys.stderr) # To write error in stderr, not stdout
         sys.exit(1)
-
-    value = float(input[0])
+    
+    value = input[0]
     from_unit = input[1]
 
-    if len(sys.argv) != 1: ## input from cmd args
-        to_unit = sys.argv[1]
-    else:
-        print("Wrong format")
+    # Input from cmd args
+    if len(sys.argv) != 2:
+        print("Wrong format", file=sys.stderr) 
         sys.exit(1)
+
+    to_unit = sys.argv[1]
+
 
     try:
         result = convert_units(value, from_unit, to_unit)
@@ -31,6 +33,7 @@ def main():
     except ValueError as e:
         sys.stderr.write(f"ERROR: {e}\n")
         sys.exit(0)
+
 
 def convert_units(value, from_unit, to_unit):
 
@@ -48,13 +51,13 @@ def convert_units(value, from_unit, to_unit):
 
     return converted_value
 
+
 if __name__ == "__main__":
     raise SystemExit(main())
 
-    #sys.exit(main())
 
-
-'''тема лаби cli, exitcodes та stdin/stdout/stderr
+'''
+тема лаби cli, exitcodes та stdin/stdout/stderr
 
 має працювати: 
 echo 100 m | python unit_convertor.py cm
@@ -65,4 +68,5 @@ echo 100 m | python unit_convertor.py cm
 - тести, які перевіряють коди виходу програми (0 якщо все добре, не нуль якщо помилка)
 - тести які перевіряють, що помилка пишеться саме в stderr
 - тести на те, що значення одиниць для конвертації читаються саме з stdin '''
+
 
