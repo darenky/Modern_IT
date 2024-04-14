@@ -1,6 +1,6 @@
-- [x] Git, SDLC, CI
-- [ ] I/O, CLI
-- [ ] OOP, SOLID
-- [ ] Memory, GC
-- [ ] Docker, CI/CD
-- [ ] Terraform, AWS, Localstack
+- [x] Lab1 - Git, SDLC, CI
+- [ ] Lab2 - I/O, CLI
+- [ ] Lab3 - OOP, SOLID
+- [ ] Lab4 - Memory, GC
+- [ ] Lab5 - Docker, CI/CD
+- [ ] Lab6 - Terraform, AWS, Localstack
