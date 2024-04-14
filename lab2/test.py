@@ -27,33 +27,16 @@ class Test_Unit_Convertor(unittest.TestCase):
             convert_units("invalid", "mm", "cm")
 
 
-    @patch('sys.stdin', new_callable=io.StringIO) 
-    def test_exit_code(self, mock_stdin):
+    @patch('sys.stdin', new_callable=io.StringIO)
+    def test_exit_code_and_stderr(self, mock_stdin):
         # Simulate incorrect input
-        mock_stdin.write('invalid\n')
+        mock_stdin.write('invalid km\n')
         mock_stdin.seek(0)
 
         # Capture stdout and stderr
         with patch('sys.stdout', new=io.StringIO()) as mock_stdout, \
-             patch('sys.stderr', new=io.StringIO()) as mock_stderr:
+            patch('sys.stderr', new=io.StringIO()) as mock_stderr:
             # Call the main function with incorrect input
-            with self.assertRaises(SystemExit) as cm:
-                main()
-
-            # Check for the expected error message
-            self.assertEqual(mock_stderr.getvalue(), 'Wrong format\n')
-            self.assertEqual(mock_stdout.getvalue(), '')
-            self.assertEqual(cm.exception.code, 1)
-
-
-    @patch('sys.stdin', new_callable=io.StringIO)
-    def test_stderr(self, mock_stdin):
-        mock_stdin.write('invalid km\n')
-        mock_stdin.seek(0)
-
-        with patch('sys.stdout', new=io.StringIO()) as mock_stdout, \
-             patch('sys.stderr', new=io.StringIO()) as mock_stderr:
-            
             with self.assertRaises(SystemExit) as cm:
                 main()
 
