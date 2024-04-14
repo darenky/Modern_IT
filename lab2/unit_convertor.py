@@ -13,7 +13,7 @@ def main():
     # Input from stdin
     input = sys.stdin.read().strip().split()
     if len(input) != 2:
-        print("Wrong format", file=sys.stderr) # To write error in stderr, not stdout
+        sys.stderr.write("ERROR: Wrong format\n") 
         sys.exit(1)
     
     value = input[0]
@@ -21,7 +21,7 @@ def main():
 
     # Input from cmd args
     if len(sys.argv) != 2:
-        print("Wrong format", file=sys.stderr) 
+        sys.stderr.write("ERROR: Wrong format\n") 
         sys.exit(1)
 
     to_unit = sys.argv[1]

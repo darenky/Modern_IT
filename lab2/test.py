@@ -1,9 +1,8 @@
 import unittest
-from unit_convertor import convert_units
-from unittest.mock import patch
-from unit_convertor import main
 import sys
 import io
+from unittest.mock import patch
+from unit_convertor import main, convert_units
 
 class Test_Unit_Convertor(unittest.TestCase):
 
@@ -40,7 +39,7 @@ class Test_Unit_Convertor(unittest.TestCase):
             with self.assertRaises(SystemExit) as cm:
                 main()
 
-            self.assertRegex(mock_stderr.getvalue(), 'Wrong format\n')
+            self.assertRegex(mock_stderr.getvalue(), 'ERROR: Wrong format\n')
             self.assertEqual(mock_stdout.getvalue(), '')
             self.assertEqual(cm.exception.code, 1)
 
