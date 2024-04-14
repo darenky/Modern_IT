@@ -1,5 +1,5 @@
 [x] Git, SDLC, CI
-[ ] I/O, CLI
+[] I/O, CLI
 [ ] OOP, SOLID
 [ ] Memory, GC
 [ ] Docker, CI/CD
