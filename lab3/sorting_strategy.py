@@ -11,18 +11,11 @@ class Context():
     def __init__(self, strategy: Strategy) -> None:
         self._strategy = strategy
 
-    @property
-    def strategy(self) -> Strategy:
-        return self._strategy
-
-    @strategy.setter
-    def strategy(self, strategy: Strategy) -> None:
-        self._strategy = strategy
-
-    def do_some_business_logic(self) -> None:
+    def do_some_business_logic(self) -> List:
         print("Context: Sorting data using the strategy (not sure how it'll do it)")
         result = self._strategy.do_algorithm(["a", "b", "c", "d", "e"])
         print(",".join(result))
+        return result
 
 
 class Strategy(ABC):
@@ -37,10 +30,9 @@ class FIFOSortStrategy(Strategy):
         return sorted(data)
 
 
-class FILOSortStrategy(Strategy):
+class LIFOSortStrategy(Strategy):
     def do_algorithm(self, data: List) -> List:
-        return reversed(sorted(data))
-
+        return list(reversed(sorted(data)))
 
 class BubbleSortStrategy(Strategy):
     def do_algorithm(self, data: List) -> List:
@@ -71,7 +63,7 @@ if __name__ == "__main__":
     print()
 
     print("Client: Strategy is set to FILO sorting.")
-    context.strategy = FILOSortStrategy()
+    context.strategy = LIFOSortStrategy()
     context.do_some_business_logic()
     print()
 
