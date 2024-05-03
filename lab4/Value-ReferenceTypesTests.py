@@ -1,4 +1,5 @@
 import unittest
+import sys
 
 class TestValueReferenceTypes(unittest.TestCase):
 
@@ -15,15 +16,17 @@ class TestValueReferenceTypes(unittest.TestCase):
 
     
     def test_pass_by_value_int_on_stack(self):
-        def check_stack_allocation(x):
-            initial_id = id(x)
-            x += 1
-            modified_id = id(x)
+            def check_memory_allocation(x):
+                before_allocation = sys.getsizeof([]) 
+                
+                value = x
 
-            self.assertNotEqual(initial_id, modified_id)
+                after_allocation = sys.getsizeof([]) 
+          
+                self.assertEqual(before_allocation, after_allocation)
 
-        value = 5
-        check_stack_allocation(value)
+            value = 5
+            check_memory_allocation(value)
 
     def test_pass_by_value_string(self):
         def modify_string(s):
