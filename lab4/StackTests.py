@@ -59,7 +59,7 @@ def test_stack():
     except IndexError:
         pass
 
-    print("All test cases passed!")
+    print("Stack test cases passed!")
 
 if __name__ == "__main__":
     test_stack()

@@ -13,6 +13,18 @@ class TestValueReferenceTypes(unittest.TestCase):
         self.assertEqual(original_value, 5)  # Check that original value is not modified
         self.assertEqual(modified_value, 6)  # Check that modified value is modified
 
+    
+    def test_pass_by_value_int_on_stack(self):
+        def check_stack_allocation(x):
+            initial_id = id(x)
+            x += 1
+            modified_id = id(x)
+
+            self.assertNotEqual(initial_id, modified_id)
+
+        value = 5
+        check_stack_allocation(value)
+
     def test_pass_by_value_string(self):
         def modify_string(s):
             s += " world"
