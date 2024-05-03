@@ -14,19 +14,12 @@ class TestValueReferenceTypes(unittest.TestCase):
         self.assertEqual(original_value, 5)  # Check that original value is not modified
         self.assertEqual(modified_value, 6)  # Check that modified value is modified
 
-    
-    def test_pass_by_value_int_on_stack(self):
-            def check_memory_allocation(x):
-                before_allocation = sys.getsizeof([]) 
-                
-                value = x
-
-                after_allocation = sys.getsizeof([]) 
-          
-                self.assertEqual(before_allocation, after_allocation)
-
-            value = 5
-            check_memory_allocation(value)
+    def test_created_on_stack(self):
+        before_allocation = sys.getsizeof([])  
+        obj_ = 42  
+        after_allocation = sys.getsizeof([])
+        delta = after_allocation - before_allocation
+        self.assertEqual(delta, 0)
 
     def test_pass_by_value_string(self):
         def modify_string(s):
