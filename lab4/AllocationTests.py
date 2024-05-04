@@ -1,36 +1,46 @@
-import unittest
 import sys
+import gc
+import unittest
+
+def get_memory_usage(): #get current memory usage
+    gc.collect()
+    return sys.getsizeof(0)
 
 class TestMemoryAllocation(unittest.TestCase):
-    def test_created_on_stack_int(self):  # Heap delta>0
-        before_int_allocation = sys.getsizeof(int())
-        int_obj = 100
-        after_int_allocation = sys.getsizeof(int_obj)  
-        int_delta = after_int_allocation - before_int_allocation
-        self.assertGreater(int_delta, 0)
- 
-    def test_created_on_stack_float(self):  # Stack delta=0
-        before_float_allocation = sys.getsizeof(int())
-        float_obj = 21.9
-        after_float_allocation = sys.getsizeof(float_obj)  
-        float_delta = after_float_allocation - before_float_allocation
-        self.assertEqual(float_delta, 0)
+    def test_int_storage(self):
+        self.check_storage_location(1, "Stack")
 
-    def test_created_on_heap_list(self): # Heap 
-        before_list_allocation = sys.getsizeof([])
-        list_obj = [1, 2, 3]
-        after_list_allocation = sys.getsizeof(list_obj)  
-        list_delta = after_list_allocation - before_list_allocation
-        self.assertGreater(list_delta, 0)
+    def test_float_storage(self):
+        self.check_storage_location(1.0, "Stack")
 
-    def test_created_on_heap_str(self): # Heap 
-        before_str_allocation = sys.getsizeof(str())
-        str_obj = "Hello, world!"
-        after_str_allocation = sys.getsizeof(str_obj) 
-        str_delta = after_str_allocation - before_str_allocation
-        self.assertGreater(str_delta, 0)
+    def test_bool_storage(self):
+        self.check_storage_location(True, "Stack")
+
+    def test_string_storage(self):
+        self.check_storage_location("string", "Stack")
+
+    def test_list_storage(self):
+        self.check_storage_location([], "Stack")
+
+    def test_tuple_storage(self):
+        self.check_storage_location((), "Stack")
+
+    def test_dict_storage(self):
+        self.check_storage_location({}, "Stack")
+
+    def check_storage_location(self, value_type, expected_location):
+
+        initial_memory_usage = get_memory_usage()
+        obj = value_type
+        final_memory_usage = get_memory_usage()
+        delta = final_memory_usage - initial_memory_usage
+
+        if delta == 0:
+            storage_location = "Stack"
+        else:
+            storage_location = "Heap"
+
+        self.assertEqual(storage_location, expected_location, f"Value type {type(obj)} should be stored on the {expected_location}")
 
 if __name__ == '__main__':
     unittest.main()
-
-
