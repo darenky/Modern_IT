@@ -1,46 +1,49 @@
-import sys
-import gc
-import unittest
+# Test for stack-based objects
+def test_stack_based_objects():
+    a = 42
+    b = "Hello"
+    c = 42
+    d = "Hello"
 
-def get_memory_usage(): #get current memory usage
-    gc.collect()
-    return sys.getsizeof(0)
+    print("IDs of small integers:")
+    print(f"id(a) = {id(a)}")
+    print(f"id(c) = {id(c)}")
 
-class TestMemoryAllocation(unittest.TestCase):
-    def test_int_storage(self):
-        self.check_storage_location(1, "Stack")
+    print("\nIDs of short strings:")
+    print(f"id(b) = {id(b)}")
+    print(f"id(d) = {id(d)}")
 
-    def test_float_storage(self):
-        self.check_storage_location(1.0, "Stack")
+    # Small integers and short strings are likely to have the same ID,
+    # suggesting they are allocated on the stack and reused.
 
-    def test_bool_storage(self):
-        self.check_storage_location(True, "Stack")
+# Test for heap-based objects 
+def test_heap_based_objects():
+    my_list = [1, 2, 3]
+    my_dict = {"a": 1, "b": 2}
 
-    def test_string_storage(self):
-        self.check_storage_location("string", "Stack")
+    class MyClass:
+        pass
 
-    def test_list_storage(self):
-        self.check_storage_location([], "Stack")
+    obj = MyClass()
 
-    def test_tuple_storage(self):
-        self.check_storage_location((), "Stack")
+    print("\nIDs of heap-based objects:")
+    print(f"id(my_list) = {id(my_list)}")
+    print(f"id(my_dict) = {id(my_dict)}")
+    print(f"id(obj) = {id(obj)}")
 
-    def test_dict_storage(self):
-        self.check_storage_location({}, "Stack")
+    # Create new instances to observe different IDs
+    new_list = [1, 2, 3]
+    new_dict = {"a": 1, "b": 2}
+    new_obj = MyClass()
 
-    def check_storage_location(self, value_type, expected_location):
+    print("\nIDs of new instances:")
+    print(f"id(new_list) = {id(new_list)}")
+    print(f"id(new_dict) = {id(new_dict)}")
+    print(f"id(new_obj) = {id(new_obj)}")
 
-        initial_memory_usage = get_memory_usage()
-        obj = value_type
-        final_memory_usage = get_memory_usage()
-        delta = final_memory_usage - initial_memory_usage
+    # Heap-based objects are likely to have different IDs across instances,
+    # suggesting they are allocated on the heap.
 
-        if delta == 0:
-            storage_location = "Stack"
-        else:
-            storage_location = "Heap"
 
-        self.assertEqual(storage_location, expected_location, f"Value type {type(obj)} should be stored on the {expected_location}")
-
-if __name__ == '__main__':
-    unittest.main()
+test_stack_based_objects()
+test_heap_based_objects()
