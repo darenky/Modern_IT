@@ -1,3 +1,4 @@
+import unittest
 import gc
 
 class MyObject:
@@ -14,31 +15,32 @@ def manual_collect():
     print(f"Unreachable objects collected: {collected}")
     print("Garbage collection finished.")
 
-def main():
-    obj1 = MyObject("Object 1")
-    obj2 = MyObject("Object 2")
-    obj3 = MyObject("Object 3")
+class TestGarbageCollection(unittest.TestCase):
+    def test_garbage_collection(self):
+        obj1 = MyObject("Object 1")
+        obj2 = MyObject("Object 2")
+        obj3 = MyObject("Object 3")
 
-    print(obj1.obj_info)
-    print(obj2.obj_info)
-    print(obj3.obj_info)
+        self.assertEqual(obj1.obj_info, "Object Name: Object 1, Object ID: {}".format(id(obj1)))
+        self.assertEqual(obj2.obj_info, "Object Name: Object 2, Object ID: {}".format(id(obj2)))
+        self.assertEqual(obj3.obj_info, "Object Name: Object 3, Object ID: {}".format(id(obj3)))
 
-    del obj1
-    del obj2
+        del obj1
+        del obj2
 
-    manual_collect()
+        manual_collect()
 
-    obj4 = MyObject("Object 4")
-    obj5 = MyObject("Object 5")
-    obj4.obj5 = obj5
-    obj5.obj4 = obj4
+        obj4 = MyObject("Object 4")
+        obj5 = MyObject("Object 5")
+        obj4.obj5 = obj5
+        obj5.obj4 = obj4
 
-    manual_collect()
+        manual_collect()
 
-    del obj4
-    del obj5
+        del obj4
+        del obj5
 
-    manual_collect()
+        manual_collect()
 
 if __name__ == "__main__":
-    main()
+    unittest.main()
