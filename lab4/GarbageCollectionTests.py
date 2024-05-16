@@ -1,38 +1,31 @@
-import unittest
+# потрібен такий тест:
+# 1) створюємо великий об'єкт та зануляємо на нього посилання
+# 2) міряємо хіп (h1)
+# 3) викликаємо збірку сміття
+# 4) міряємо хіп (h2)
+# 5) стверджуємо, що h2 < h1 (тобто gc видалив той великий об'єкт і пам'ять звільнилася)
+
 import gc
-import sys  
+import unittest
+import sys
 
-class TestGarbageCollector(unittest.TestCase):
-
-    def setUp(self):
-        self.large_object = [None] * (10 ** 7)  
-
-    def tearDown(self):
-        del self.large_object
-        gc.collect()
-
-    def test_collection(self):
-        large_object = [None] * (10 ** 7)
+class TestGarbageCollection(unittest.TestCase):
+    def test_garbage_collection(self):
+        # 1) створюємо великий об'єкт та зануляємо на нього посилання
+        large_object = bytearray(1024 * 1024 * 100)  # 100 MB
         del large_object
-        gc.collect()
-        self.assertLess(gc.get_count()[0], 10)
 
-    def test_reference_counting(self):
-        obj = object()
-        initial_refcount = sys.getrefcount(obj)
-        another_ref = obj
-        self.assertEqual(sys.getrefcount(obj), initial_refcount + 1)
-        del another_ref
-        self.assertEqual(sys.getrefcount(obj), initial_refcount)
+        # 2) міряємо хіп (h1)
+        h1 = sys.getsizeof(gc.get_objects())
 
-    def test_cycle_detection(self):
-        obj1 = {}
-        obj2 = {}
-        obj1['obj2'] = obj2
-        obj2['obj1'] = obj1
-        del obj1, obj2
+        # 3) викликаємо збірку сміття
         gc.collect()
-        self.assertEqual(gc.get_count()[0], 0)
+
+        # 4) міряємо хіп (h2)
+        h2 = sys.getsizeof(gc.get_objects())
+
+        # 5) стверджуємо, що h2 < h1 (тобто gc видалив той великий об'єкт і пам'ять звільнилася)
+        self.assertLess(h2, h1)
 
 if __name__ == '__main__':
     unittest.main()
