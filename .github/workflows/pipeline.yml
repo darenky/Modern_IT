@@ -28,7 +28,18 @@ jobs:
           - name: Lint code
             run: |
               flake8 lab1/ lab4/ --ignore=W291,E501,E305,W293,E302,W292
+
           - name: Run tests
             run: python lab1/test_time.py 
               
-
+          - name: Build Docker image
+            run: |
+              docker build -t darenky/lab4-image lab4/
+    
+          - name: Push image to Docker Hub
+            run: |
+              docker push darenky/lab4-image
+    
+          - name: Run tests in Docker container
+            run: |
+              docker run darenky/lab4-image sh -c 'cd lab4 && python -m unittest discover -s . -p "*Tests.py"'
