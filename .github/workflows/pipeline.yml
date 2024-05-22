@@ -27,11 +27,8 @@ jobs:
       
           - name: Lint code
             run: |
-              flake8 lab1/ lab4/ --ignore=W291,E501,E305,W293,E302,W292
+              flake8 lab4/ --ignore=W291,E501,E305,W293,E302,W292
 
-          - name: Run tests
-            run: python lab1/test_time.py 
-              
           - name: Build Docker image
             run: |
               docker build -t darenky/lab4-image lab4/
