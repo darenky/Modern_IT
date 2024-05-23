@@ -29,6 +29,12 @@ jobs:
           docker build -t $REGISTRY/darenky/$IMAGE_NAME:${{ github.sha }} lab4/
           docker push $REGISTRY/darenky/$IMAGE_NAME:${{ github.sha }}
 
+      - name: Run tests in Docker container
+        env:
+          REGISTRY: docker.io
+          IMAGE_NAME: lab5
+        run: |
+          docker run $REGISTRY/darenky/$IMAGE_NAME:${{ github.sha }} python -m unittest discover -p "*Tests.py" -v
 
 
 
