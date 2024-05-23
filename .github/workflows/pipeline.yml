@@ -30,10 +30,8 @@ jobs:
               flake8 lab4/ --ignore=W291,E501,E305,W293,E302,W292
 
           - name: Run tests
-            run: python -m unittest discover -p "*Tests.py"
+            run: python -m unittest discover  -s lab4 -p "*Tests.py"
             
-# lab5
-
           - name: Login to Docker Hub
             uses: docker/login-action@v2
             with:
@@ -47,3 +45,6 @@ jobs:
             run: |
               docker build -t $REGISTRY/darenky/$IMAGE_NAME:${{ github.sha }} lab4/
               docker push $REGISTRY/darenky/$IMAGE_NAME:${{ github.sha }}
+
+              
+             
