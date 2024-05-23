@@ -21,7 +21,8 @@ jobs:
           - name: Build and push Docker image
             env:
               REGISTRY: docker.io
-              IMAGE_NAME: lab
+              IMAGE_NAME: lab5
             run: |
               docker build -t $REGISTRY/darenky/$IMAGE_NAME:${{ github.sha }} lab4/
               docker push $REGISTRY/darenky/$IMAGE_NAME:${{ github.sha }}
+
