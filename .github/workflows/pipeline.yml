@@ -40,5 +40,5 @@ jobs:
               IMAGE_NAME: lab5
             run: |
               docker build -t $REGISTRY/darenky/$IMAGE_NAME:${{ github.sha }} lab4/
-              docker login -u darenky -p YOUR_ACCESS_TOKEN_HERE $REGISTRY
+              echo "${{ secrets.DOCKER_ACCESS_TOKEN }}" | docker login -u darenky --password-stdin $REGISTRY
               docker push $REGISTRY/darenky/$IMAGE_NAME:${{ github.sha }}
