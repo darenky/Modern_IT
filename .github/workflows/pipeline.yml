@@ -30,5 +30,5 @@ jobs:
               flake8 lab4/ --ignore=W291,E501,E305,W293,E302,W292
 
           - name: Run tests
-            run: python -m unittest discover -s . -p "*Tests.py"'
+            run: python -m unittest discover -p "*Tests.py"'
             
