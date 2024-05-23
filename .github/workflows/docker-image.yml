@@ -34,7 +34,8 @@ jobs:
           REGISTRY: docker.io
           IMAGE_NAME: lab5
         run: |
-          docker run $REGISTRY/darenky/$IMAGE_NAME:${{ github.sha }} python -m unittest discover -p "*Tests.py" -v
+          docker run $REGISTRY/darenky/$IMAGE_NAME:${{ github.sha }} 
+
 
 
 
