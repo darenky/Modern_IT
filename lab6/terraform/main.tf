@@ -1,3 +1,4 @@
+# Provider Configuration
 provider "aws" {
   access_key                  = "test"
   secret_key                  = "test"
@@ -34,20 +35,13 @@ resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
   role       = aws_iam_role.lambda_role.name
 }
 
-# Create the Lambda function
-data "archive_file" "lambda_zip" {
-  type        = "zip"
-  source_dir  = "${path.module}/lambda/"
-  output_path = "${path.module}/lambda.zip"
+# Create the S3 buckets
+resource "aws_s3_bucket" "source_bucket" {
+  bucket = "source-bucket"
 }
 
-resource "aws_lambda_function" "file_transfer" {
-  filename         = data.archive_file.lambda_zip.output_path
-  function_name    = "file-transfer-lambda"
-  handler          = "main.lambda_handler"
-  runtime          = "python3.8"
-  role             = aws_iam_role.lambda_role.arn
-  source_code_hash = data.archive_file.lambda_zip.output_base64sha256
+resource "aws_s3_bucket" "destination_bucket" {
+  bucket = "destination-bucket"
 }
 
 # Define the S3 bucket lifecycle and event notification
@@ -64,13 +58,20 @@ resource "aws_s3_bucket_lifecycle_configuration" "source_bucket_lifecycle" {
   }
 }
 
-# Create the S3 buckets
-resource "aws_s3_bucket" "source_bucket" {
-  bucket = "source-bucket"
+# Create the Lambda function
+data "archive_file" "lambda_zip" {
+  type        = "zip"
+  source_dir  = "${path.module}/lambda/"
+  output_path = "${path.module}/lambda.zip"
 }
 
-resource "aws_s3_bucket" "destination_bucket" {
-  bucket = "destination-bucket"
+resource "aws_lambda_function" "file_transfer" {
+  filename         = data.archive_file.lambda_zip.output_path
+  function_name    = "file-transfer-lambda"
+  handler          = "main.lambda_handler"
+  runtime          = "python3.8"
+  role             = aws_iam_role.lambda_role.arn
+  source_code_hash = data.archive_file.lambda_zip.output_base64sha256
 }
 
 resource "aws_lambda_permission" "allow_bucket_invoke" {
