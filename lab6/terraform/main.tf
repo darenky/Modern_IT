@@ -11,6 +11,7 @@ provider "aws" {
     lambda = "http://localhost:4566"
     iam    = "http://localhost:4566"
     s3     = "http://s3.localhost.localstack.cloud:4566"
+    sns    = "http://localhost:4566"
   }
 }
 
@@ -66,13 +67,19 @@ data "archive_file" "lambda_zip" {
 }
 
 resource "aws_lambda_function" "file_transfer" {
-  filename         = data.archive_file.lambda_zip.output_path
-  function_name    = "file-transfer-lambda"
-  handler          = "main.lambda_handler"
-  runtime          = "python3.8"
-  role             = aws_iam_role.lambda_role.arn
-  source_code_hash = data.archive_file.lambda_zip.output_base64sha256
+  function_name = "file_transfer_lambda"
+  handler = "lambda.lambda_handler"
+  runtime = "python3.8"
+  filename = "${data.archive_file.lambda_zip.output_path}"
+  role = aws_iam_role.lambda_role.arn
+  
+  environment {
+    variables = {
+      SNS_TOPIC_ARN = aws_sns_topic.file_transfer_notification.arn
+    }
+  }
 }
+
 
 resource "aws_lambda_permission" "allow_bucket_invoke" {
   statement_id  = "AllowS3Invoke"
@@ -95,5 +102,6 @@ resource "aws_s3_bucket_notification" "source_bucket_notification" {
   ]
 }
 
-# ADDITIONAL TASK
-
+resource "aws_sns_topic" "file_transfer_notification" {
+  name = "file-transfer-notification"
+}
