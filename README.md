@@ -3,4 +3,4 @@
 - [x] Lab3 - OOP, SOLID
 - [x] Lab4 - Memory, GC
 - [x] Lab5 - Docker, CI/CD
-- [ ] Lab6 - Terraform, AWS, Localstack
+- [x] Lab6 - Terraform, AWS, Localstack
