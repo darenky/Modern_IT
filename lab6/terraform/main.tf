@@ -1,7 +1,7 @@
 # Provider Configuration
 provider "aws" {
-  access_key                  = "test"
-  secret_key                  = "test"
+  access_key                  = "mock_access_key"
+  secret_key                  = "mock_secret_key"
   region                      = "eu-central-1"
   skip_credentials_validation = true
   skip_metadata_api_check     = true
@@ -94,3 +94,6 @@ resource "aws_s3_bucket_notification" "source_bucket_notification" {
     aws_lambda_permission.allow_bucket_invoke
   ]
 }
+
+# ADDITIONAL TASK
+
