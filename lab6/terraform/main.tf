@@ -1,107 +1,118 @@
-# Provider Configuration
 provider "aws" {
-  access_key                  = "mock_access_key"
-  secret_key                  = "mock_secret_key"
-  region                      = "eu-central-1"
-  skip_credentials_validation = true
-  skip_metadata_api_check     = true
-  skip_requesting_account_id  = true
+  access_key = "mock_access_key"
+  secret_key = "mock_secret_key"
+  region     = "eu-central-1"
+
+  s3_use_path_style            = true
+  skip_credentials_validation  = true
+  skip_metadata_api_check      = true
+  skip_requesting_account_id   = true
 
   endpoints {
+    s3     = "http://localhost:4566"
     lambda = "http://localhost:4566"
     iam    = "http://localhost:4566"
-    s3     = "http://s3.localhost.localstack.cloud:4566"
-    sns    = "http://localhost:4566"
   }
 }
 
-# Define the IAM role for the Lambda function
-data "aws_iam_policy_document" "lambda_assume_role_policy" {
+locals {
+  lifecycle_policy = {
+    id     = "lifecycle-rule"
+    status = "Enabled"
+
+    transition = {
+      days         = 30
+      storage_class = "GLACIER"
+    }
+
+    expiration = {
+      days = 365
+    }
+  }
+}
+
+resource "aws_s3_bucket" "start_bucket" {
+  bucket = "s3-start"
+}
+
+resource "aws_s3_bucket" "finish_bucket" {
+  bucket = "s3-finish"
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "start-lifecycle" {
+  bucket = aws_s3_bucket.start_bucket.id
+
+  rule {
+    id     = local.lifecycle_policy.id
+    status = local.lifecycle_policy.status
+
+    transition {
+      days          = local.lifecycle_policy.transition.days
+      storage_class = local.lifecycle_policy.transition.storage_class
+    }
+
+    expiration {
+      days = local.lifecycle_policy.expiration.days
+    }
+  }
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "finish-lifecycle" {
+  bucket = aws_s3_bucket.finish_bucket.id
+
+  rule {
+    id     = local.lifecycle_policy.id
+    status = local.lifecycle_policy.status
+
+    transition {
+      days          = local.lifecycle_policy.transition.days
+      storage_class = local.lifecycle_policy.transition.storage_class
+    }
+
+    expiration {
+      days = local.lifecycle_policy.expiration.days
+    }
+  }
+}
+
+data "aws_iam_policy_document" "lambda_policy" {
   statement {
-    actions = ["sts:AssumeRole"]
+    effect = "Allow"
+
     principals {
       type        = "Service"
       identifiers = ["lambda.amazonaws.com"]
     }
+
+    actions = ["sts:AssumeRole"]
   }
 }
 
 resource "aws_iam_role" "lambda_role" {
-  name               = "lambda-exec-role"
-  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role_policy.json
+  name               = "lambda_role"
+  assume_role_policy = data.aws_iam_policy_document.lambda_policy.json
 }
 
-resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-  role       = aws_iam_role.lambda_role.name
-}
-
-# Create the S3 buckets
-resource "aws_s3_bucket" "source_bucket" {
-  bucket = "source-bucket"
-}
-
-resource "aws_s3_bucket" "destination_bucket" {
-  bucket = "destination-bucket"
-}
-
-# Define the S3 bucket lifecycle and event notification
-resource "aws_s3_bucket_lifecycle_configuration" "source_bucket_lifecycle" {
-  bucket = aws_s3_bucket.source_bucket.id
-
-  rule {
-    id     = "delete-objects-after-7-days"
-    status = "Enabled"
-
-    expiration {
-      days = 7
-    }
-  }
-}
-
-# Create the Lambda function
-data "archive_file" "lambda_zip" {
+data "archive_file" "lambda" {
   type        = "zip"
-  source_dir  = "${path.module}/lambda/"
-  output_path = "${path.module}/lambda.zip"
+  source_file = "lambda.py"
+  output_path = "lambda.zip"
 }
 
-resource "aws_lambda_function" "file_transfer" {
-  function_name = "file_transfer_lambda"
-  handler = "lambda.lambda_handler"
-  runtime = "python3.8"
-  filename = "${data.archive_file.lambda_zip.output_path}"
-  role = aws_iam_role.lambda_role.arn
-  
-  environment {
-    variables = {
-      SNS_TOPIC_ARN = aws_sns_topic.file_transfer_notification.arn
-    }
-  }
+resource "aws_lambda_function" "lambda_function" {
+  filename         = "lambda.zip"
+  function_name    = "lambda-function"
+  role             = aws_iam_role.lambda_role.arn
+  handler          = "lambda.lambda_handler"
+  runtime          = "python3.10"
+  source_code_hash = filebase64sha256(data.archive_file.lambda.output_path)
 }
 
-
-resource "aws_lambda_permission" "allow_bucket_invoke" {
-  statement_id  = "AllowS3Invoke"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.file_transfer.function_name
-  principal     = "s3.amazonaws.com"
-  source_arn    = aws_s3_bucket.source_bucket.arn
-}
-
-resource "aws_s3_bucket_notification" "source_bucket_notification" {
-  bucket = aws_s3_bucket.source_bucket.id
+resource "aws_s3_bucket_notification" "bucket_notification" {
+  bucket = aws_s3_bucket.start_bucket.id
 
   lambda_function {
-    lambda_function_arn = aws_lambda_function.file_transfer.arn
+    lambda_function_arn = aws_lambda_function.lambda_function.arn
     events              = ["s3:ObjectCreated:*"]
   }
-
-  depends_on = [
-    aws_lambda_permission.allow_bucket_invoke
-  ]
-}
-
-resource "aws_sns_topic" "file_transfer_notification" {
-  name = "file-transfer-notification"
 }
